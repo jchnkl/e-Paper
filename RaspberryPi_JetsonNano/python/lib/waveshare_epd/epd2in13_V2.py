@@ -222,7 +222,6 @@ class EPD:
             buf[i] ^= 0xFF
         return buf
 
-
     def display(self, image):
         self.send_command(0x24)
         self.send_data2(image)
