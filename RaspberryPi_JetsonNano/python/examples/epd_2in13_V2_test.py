@@ -31,7 +31,7 @@ try:
     image = Image.new('1', (epd.height, epd.width), 255)  # 255: clear the frame    
     draw = ImageDraw.Draw(image)
 
-    if False:
+    if True:
         draw.rectangle([(0,0),(50,50)],outline = 0)
         draw.rectangle([(55,0),(100,50)],fill = 0)
         draw.line([(0,0),(50,50)], fill = 0,width = 1)
@@ -47,14 +47,14 @@ try:
         epd.display(epd.getbuffer(image))
         time.sleep(2)
 
-    if False:
+    if True:
         # read bmp file 
         logging.info("2.read bmp file...")
         image = Image.open(os.path.join(picdir, '2in13.bmp'))
         epd.display(epd.getbuffer(image))
         time.sleep(2)
 
-    if False:
+    if True:
         # read bmp file on window
         logging.info("3.read bmp file on window...")
         # epd.Clear(0xFF)
@@ -83,7 +83,7 @@ try:
             stop = time.time()
             print(f'displayPartial took {stop - start}')
             num = num + 1
-            if(num == 30):
+            if(num == 10):
                 break
         # epd.Clear(0xFF)
         logging.info("Clear...")
