@@ -125,6 +125,10 @@ class JetsonNano:
     def spi_writebyte(self, data):
         self.SPI.SYSFS_software_spi_transfer(data[0])
 
+    def spi_writebyte2(self, data):
+        for d in data:
+            self.SPI.SYSFS_software_spi_transfer(d)
+
     def module_init(self):
         self.GPIO.setmode(self.GPIO.BCM)
         self.GPIO.setwarnings(False)
