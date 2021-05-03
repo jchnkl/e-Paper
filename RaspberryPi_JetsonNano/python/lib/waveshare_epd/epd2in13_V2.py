@@ -111,7 +111,7 @@ class EPD:
 
     def ReadBusy(self):
         while(epdconfig.digital_read(self.busy_pin) == 1):      # 0: idle, 1: busy
-            epdconfig.delay_ms(10)
+            epdconfig.delay_ms(100)
 
     def TurnOnDisplay(self):
         self.send_command(0x22)
@@ -222,6 +222,7 @@ class EPD:
         for i in range(len(buf)):
             buf[i] ^= 0xFF
         return buf
+
 
     def display(self, image):
         self.send_command(0x24)
