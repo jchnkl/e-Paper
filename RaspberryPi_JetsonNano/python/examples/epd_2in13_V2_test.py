@@ -77,11 +77,12 @@ try:
         num = 0
         while (True):
             time_draw.rectangle((120, 80, 220, 105), fill = 255)
-            time_draw.text((120, 80), time.strftime('%H:%M:%S'), font = font24, fill = 0)
+            text = time.strftime('%H:%M:%S')
+            time_draw.text((120, 80), text, font = font24, fill = 0)
             start = time.time()
             epd.displayPartial(epd.getbuffer(time_image))
             stop = time.time()
-            print(f'displayPartial took {stop - start}')
+            print(f'{text} :: displayPartial took {stop - start}')
             num = num + 1
             if(num == 30):
                 break
