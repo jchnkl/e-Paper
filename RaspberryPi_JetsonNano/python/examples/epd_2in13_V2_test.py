@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 try:
     logging.info("epd2in13_V2 Demo")
-    
+
     epd = epd2in13_V2.EPD()
     logging.info("init and Clear")
     epd.init(epd.FULL_UPDATE)
@@ -26,7 +26,7 @@ try:
     # Drawing on the image
     font15 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 15)
     font24 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 24)
-    
+
     logging.info("1.Drawing on the image...")
     image = Image.new('1', (epd.height, epd.width), 255)  # 255: clear the frame    
     draw = ImageDraw.Draw(image)
@@ -83,7 +83,7 @@ try:
             stop = time.time()
             print(f'displayPartial took {stop - start}')
             num = num + 1
-            if(num == 10):
+            if(num == 30):
                 break
         # epd.Clear(0xFF)
         logging.info("Clear...")
