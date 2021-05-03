@@ -238,14 +238,18 @@ class EPD:
              for i in range(0, linewidth):
                  image[i + j * linewidth] = ~image[i + j * linewidth]
 
+        self.send_command(0x24)
+        self.send_data2(image)
         self.send_command(0x26)
         self.send_data2(image)
         self.TurnOnDisplayPart()
 
     def displayPartBaseImage(self, image):
+        self.send_command(0x24)
+        self.send_data2(image)
         self.send_command(0x26)
         self.send_data2(image)
-        self.TurnOnDisplayPart()
+        self.TurnOnDisplay()
 
     def Clear(self, color):
         if self.width % 8 == 0:
