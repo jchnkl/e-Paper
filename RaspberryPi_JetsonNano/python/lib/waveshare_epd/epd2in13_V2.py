@@ -220,6 +220,7 @@ class EPD:
         # in the e-paper world 0=white and 1=black.
         for i in range(len(buf)):
             buf[i] ^= 0xFF
+
         return buf
 
     def display(self, image):
@@ -228,33 +229,23 @@ class EPD:
         self.TurnOnDisplay()
 
     def displayPartial(self, image):
-        if self.width%8 == 0:
-            linewidth = int(self.width/8)
+        if self.width % 8 == 0:
+            linewidth = int(self.width / 8)
         else:
-            linewidth = int(self.width/8) + 1
+            linewidth = int(self.width / 8) + 1
 
-        self.send_command(0x24)
-        self.send_data2(image)
-
-        self.send_command(0x26)
         for j in range(0, self.height):
              for i in range(0, linewidth):
                  image[i + j * linewidth] = ~image[i + j * linewidth]
+
+        self.send_command(0x26)
         self.send_data2(image)
         self.TurnOnDisplayPart()
 
     def displayPartBaseImage(self, image):
-        if self.width%8 == 0:
-            linewidth = int(self.width/8)
-        else:
-            linewidth = int(self.width/8) + 1
-
-        self.send_command(0x24)
-        self.send_data2(image)
-
         self.send_command(0x26)
         self.send_data2(image)
-        self.TurnOnDisplay()
+        self.TurnOnDisplayPart()
 
     def Clear(self, color):
         if self.width % 8 == 0:
@@ -271,7 +262,6 @@ class EPD:
 
         self.send_command(0x24)
         self.send_data2(data)
-
         self.TurnOnDisplay()
 
     def sleep(self):
