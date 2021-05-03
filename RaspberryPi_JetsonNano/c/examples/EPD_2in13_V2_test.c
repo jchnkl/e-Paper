@@ -186,29 +186,26 @@ int EPD_2in13_V2_test(void)
             }
         }
 
-        // gettimeofday(&start, NULL);
-        // gettimeofday(&stop, NULL);
-
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+        gettimeofday(&start, NULL);
         Paint_ClearWindows(140, 90, 140 + Font20.Width * 7, 90 + Font20.Height, WHITE);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-        uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+        gettimeofday(&stop, NULL);
+        uint64_t delta_us = (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec;
         printf("Paint_ClearWindows took %lu us\n", delta_us);
 
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+        gettimeofday(&start, NULL);
         Paint_DrawTime(140, 90, &sPaint_time, &Font20, WHITE, BLACK);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-        delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+        gettimeofday(&stop, NULL);
+        delta_us = (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec;
         printf("Paint_DrawTime took %lu us\n", delta_us);
 
         num = num - 1;
         if(num == 0) {
             break;
         }
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+        gettimeofday(&start, NULL);
         EPD_2IN13_V2_DisplayPart(BlackImage);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-        delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+        gettimeofday(&stop, NULL);
+        delta_us = (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec;
         printf("EPD_2IN13_V2_DisplayPart took %lu us\n", delta_us);
         DEV_Delay_ms(500);//Analog clock 1s
     }
