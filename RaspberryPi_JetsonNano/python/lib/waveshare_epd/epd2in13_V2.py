@@ -212,7 +212,6 @@ class EPD:
 
         if img_width == self.height and img_width == self.width:
             img = img.rotate(90, expand=True)
-
         else:
             return [0x00] * (int(self.width / 8) * self.height)
 
@@ -258,35 +257,27 @@ class EPD:
         self.TurnOnDisplay()
 
     def Clear(self, color):
-        if self.width%8 == 0:
+        if self.width % 8 == 0:
             linewidth = int(self.width/8)
         else:
             linewidth = int(self.width/8) + 1
-        # logging.debug(linewidth)
 
-        self.send_command(0x24)
+        line = []
+        for i in range(0, linewidth):
+            line.append(color)
         data = []
         for j in range(0, self.height):
-            for i in range(0, linewidth):
-                data.append(color)
-        self.send_data2(data)
+            data.append(line)
 
-        # self.send_command(0x26)
-        # for j in range(0, self.height):
-            # for i in range(0, linewidth):
-                # self.send_data(color)
+        self.send_command(0x24)
+        self.send_data2(data)
 
         self.TurnOnDisplay()
 
     def sleep(self):
-        # self.send_command(0x22) #POWER OFF
-        # self.send_data(0xC3)
-        # self.send_command(0x20)
-
         self.send_command(0x10) #enter deep sleep
         self.send_data(0x03)
         epdconfig.delay_ms(2000)
         epdconfig.module_exit()
 
 ### END OF FILE ###
-
