@@ -207,32 +207,20 @@ class EPD:
         return 0
 
     def getbuffer(self, image):
-        if self.width%8 == 0:
-            linewidth = int(self.width/8)
+        img = image.convert('1')
+        img_width, img_height = img.size
+
+        if img_width == self.height and img_width == self.width:
+            img = img.rotate(90, expand=True)
+
         else:
-            linewidth = int(self.width/8) + 1
+            return [0x00] * (int(self.width / 8) * self.height)
 
-        buf = [0xFF] * (linewidth * self.height)
-        image_monocolor = image.convert('1')
-        imwidth, imheight = image_monocolor.size
-        pixels = image_monocolor.load()
-
-        if(imwidth == self.width and imheight == self.height):
-            logging.debug("Vertical")
-            for y in range(imheight):
-                for x in range(imwidth):
-                    if pixels[x, y] == 0:
-                        x = imwidth - x
-                        buf[int(x / 8) + y * linewidth] &= ~(0x80 >> (x % 8))
-        elif(imwidth == self.height and imheight == self.width):
-            logging.debug("Horizontal")
-            for y in range(imheight):
-                for x in range(imwidth):
-                    newx = y
-                    newy = self.height - x - 1
-                    if pixels[x, y] == 0:
-                        newy = imwidth - newy - 1
-                        buf[int(newx / 8) + newy*linewidth] &= ~(0x80 >> (y % 8))
+        buf = bytearray(img.tobytes('raw'))
+        # The bytes need to be inverted, because in the PIL world 0=black and 1=white, but
+        # in the e-paper world 0=white and 1=black.
+        for i in range(len(buf)):
+            buf[i] ^= 0xFF
         return buf
 
 
