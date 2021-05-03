@@ -189,7 +189,7 @@ int EPD_2in13_V2_test(void)
         gettimeofday(&start, NULL);
         Paint_ClearWindows(140, 90, 140 + Font20.Width * 7, 90 + Font20.Height, WHITE);
         gettimeofday(&stop, NULL);
-        delta = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+        double delta = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
         printf("Paint_ClearWindows took %f us\n", delta);
 
         gettimeofday(&start, NULL);
