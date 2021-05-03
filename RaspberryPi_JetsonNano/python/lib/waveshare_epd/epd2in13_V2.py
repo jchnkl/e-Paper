@@ -29,7 +29,6 @@
 
 
 import logging
-from PIL import ImageOps
 from . import epdconfig
 
 # Display resolution
@@ -208,21 +207,32 @@ class EPD:
         return 0
 
     def getbuffer(self, image):
-        img = image
-        imwidth, imheight = img.size
-        if(imwidth == self.width and imheight == self.height):
-            img = img.convert('1')
-        elif(imwidth == self.height and imheight == self.width):
-            # image has correct dimensions, but needs to be rotated
-            img = img.rotate(90, expand=True).convert('1')
+        if self.width%8 == 0:
+            linewidth = int(self.width/8)
         else:
-            logging.warning("Wrong image dimensions: must be " + str(self.width) + "x" + str(self.height))
-            # return a blank buffer
-            return [0x00] * (int(self.width/8) * self.height)
+            linewidth = int(self.width/8) + 1
 
-        # The bytes need to be inverted, because in the PIL world 0=black and 1=white, but
-        # in the e-paper world 0=white and 1=black.
-        buf = bytearray(ImageOps.invert(img).tobytes('raw'))
+        buf = [0xFF] * (linewidth * self.height)
+        image_monocolor = image.convert('1')
+        imwidth, imheight = image_monocolor.size
+        pixels = image_monocolor.load()
+
+        if(imwidth == self.width and imheight == self.height):
+            logging.debug("Vertical")
+            for y in range(imheight):
+                for x in range(imwidth):
+                    if pixels[x, y] == 0:
+                        x = imwidth - x
+                        buf[int(x / 8) + y * linewidth] &= ~(0x80 >> (x % 8))
+        elif(imwidth == self.height and imheight == self.width):
+            logging.debug("Horizontal")
+            for y in range(imheight):
+                for x in range(imwidth):
+                    newx = y
+                    newy = self.height - x - 1
+                    if pixels[x, y] == 0:
+                        newy = imwidth - newy - 1
+                        buf[int(newx / 8) + newy*linewidth] &= ~(0x80 >> (y % 8))
         return buf
 
 
