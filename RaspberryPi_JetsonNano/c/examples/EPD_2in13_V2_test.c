@@ -30,6 +30,8 @@
 #include "EPD_Test.h"
 #include "EPD_2in13_V2.h"
 
+#include <sys/time.h>
+
 int EPD_2in13_V2_test(void)
 {
     printf("EPD_2IN13_V2_test Demo\r\n");
@@ -56,7 +58,7 @@ int EPD_2in13_V2_test(void)
     Paint_SetMirroring(MIRROR_HORIZONTAL); //
     Paint_Clear(WHITE);
 
-#if 1   // show bmp
+#if 0   // show bmp
     printf("show window BMP-----------------\r\n");
     Paint_SelectImage(BlackImage);
     Paint_Clear(WHITE);
@@ -82,7 +84,7 @@ int EPD_2in13_V2_test(void)
     DEV_Delay_ms(2000);
 #endif
 
-#if 1   // Drawing on the image
+#if 0   // Drawing on the image
     printf("Drawing\r\n");
     //1.Select Image
     Paint_SelectImage(BlackImage);
@@ -114,7 +116,7 @@ int EPD_2in13_V2_test(void)
     DEV_Delay_ms(2000);
 #endif
 
-#if 1   // Drawing on the image
+#if 0   // Drawing on the image
     printf("Drawing\r\n");
     //1.Select Image
     Paint_SelectImage(BlackImage);
@@ -165,6 +167,9 @@ int EPD_2in13_V2_test(void)
     sPaint_time.Min = 34;
     sPaint_time.Sec = 56;
     UBYTE num = 20;
+
+    struct timeval stop, start;
+
     for (;;) {
         sPaint_time.Sec = sPaint_time.Sec + 1;
         if (sPaint_time.Sec == 60) {
@@ -180,14 +185,33 @@ int EPD_2in13_V2_test(void)
                 }
             }
         }
+
+        double delta = 0;
+
+        gettimeofday(&start, NULL);
         Paint_ClearWindows(140, 90, 140 + Font20.Width * 7, 90 + Font20.Height, WHITE);
+        // gettimeofday(&stop, NULL);
+        // delta = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+        // printf("Paint_ClearWindows took %f us\n", delta);
+
+        // gettimeofday(&start, NULL);
         Paint_DrawTime(140, 90, &sPaint_time, &Font20, WHITE, BLACK);
+        // gettimeofday(&stop, NULL);
+        // delta = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+        // printf("Paint_DrawTime took %f us\n", delta);
 
         num = num - 1;
         if(num == 0) {
             break;
         }
+        // gettimeofday(&start, NULL);
         EPD_2IN13_V2_DisplayPart(BlackImage);
+
+        gettimeofday(&stop, NULL);
+        delta = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+        // printf("EPD_2IN13_V2_DisplayPart took %f us\n", delta);
+        printf("clock update took %f us\n", delta);
+
         DEV_Delay_ms(500);//Analog clock 1s
     }
 
