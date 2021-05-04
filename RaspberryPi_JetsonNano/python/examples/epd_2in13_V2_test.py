@@ -67,7 +67,7 @@ try:
     if True:
         # # partial update
         logging.info("4.show time...")
-        time_image = Image.new('1', (epd.height, epd.width), 255)
+        time_image = Image.new('1', (epd.width, epd.height), 255).rotate(270)
         time_draw = ImageDraw.Draw(time_image)
 
         epd.init(epd.FULL_UPDATE)
@@ -76,9 +76,9 @@ try:
         epd.init(epd.PART_UPDATE)
         num = 0
         while (True):
-            time_draw.rectangle((120, 80, 220, 105), fill = 255)
             text = time.strftime('%H:%M:%S')
-            time_draw.text((120, 80), text, font = font24, fill = 0)
+            time_draw.rectangle((10, 10, 220, 105), fill = 255)
+            time_draw.text((10, 10), text, font = font24, fill = 0)
             start = time.time()
             epd.displayPartial(epd.getbuffer(time_image))
             stop = time.time()
