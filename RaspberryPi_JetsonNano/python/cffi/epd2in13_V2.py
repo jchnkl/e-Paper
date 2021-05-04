@@ -41,7 +41,7 @@ class EPD_CFFI:
         self.initialized = False
 
         if init:
-            init(self.full_update)
+            self.init(self.full_update)
 
     def __del__(self):
         if self.initialized:
