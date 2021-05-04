@@ -7,6 +7,7 @@ DIR_BIN      = ./bin
 
 OBJ_C = $(wildcard ${DIR_EPD}/*.c ${DIR_GUI}/*.c ${DIR_Examples}/*.c ${DIR_FONTS}/*.c )
 OBJ_O = $(patsubst %.c,${DIR_BIN}/%.o,$(notdir ${OBJ_C}))
+OBJ_SO = $(patsubst %.o, ${DIR_BIN}/lib%.so, $(notdir $(wildcard ${DIR_BIN}/*.o)))
 RPI_DEV_C = $(wildcard $(DIR_BIN)/dev_hardware_SPI.o $(DIR_BIN)/RPI_sysfs_gpio.o $(DIR_BIN)/DEV_Config.o )
 JETSON_DEV_C = $(wildcard $(DIR_BIN)/sysfs_software_spi.o $(DIR_BIN)/sysfs_gpio.o $(DIR_BIN)/DEV_Config.o )
 
@@ -38,13 +39,13 @@ DEBUG_JETSONI = -D $(USELIB_JETSONI) -D JETSON
 
 .PHONY : RPI JETSON clean
 
-RPI:RPI_DEV RPI_epd 
+RPI:RPI_DEV RPI_epd RPI_epd_so
 JETSON: JETSON_DEV JETSON_epd
 
 TARGET = epd
 CC = gcc
 MSG = -g -O -ffunction-sections -fdata-sections -Wall
-CFLAGS += $(MSG)
+CFLAGS += $(MSG) -fPIC
 
 RPI_epd:${OBJ_O}
 	echo $(@)
@@ -54,6 +55,8 @@ JETSON_epd:${OBJ_O}
 	echo $(@)
 	$(CC) $(CFLAGS) $(OBJ_O) $(JETSON_DEV_C) -o $(TARGET) $(LIB_JETSONI) $(DEBUG)
 
+RPI_epd_so: ${OBJ_SO}
+
 $(shell mkdir -p $(DIR_BIN))
 
 ${DIR_BIN}/%.o:$(DIR_Examples)/%.c
@@ -62,6 +65,9 @@ ${DIR_BIN}/%.o:$(DIR_Examples)/%.c
 ${DIR_BIN}/%.o:$(DIR_EPD)/%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ -I $(DIR_Config) $(DEBUG)
     
+${DIR_BIN}/lib%.so:$(DIR_BIN)/%.o
+	$(CC) -shared $< -o $@
+
 ${DIR_BIN}/%.o:$(DIR_FONTS)/%.c 
 	$(CC) $(CFLAGS) -c  $< -o $@ $(DEBUG)
     
