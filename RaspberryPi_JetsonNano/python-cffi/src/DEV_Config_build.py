@@ -15,11 +15,11 @@ ffibuilder.cdef('''
 
 ffibuilder.set_source('_DEV_Config_cffi',
 '''
-     #include "../../c/lib/Config/DEV_Config.h"
+     #include "DEV_Config.h"
 ''',
      libraries=['DEV_Config', 'wiringPi'],
-     extra_link_args=['-L../../c/bin', '-L/lib'],
-     extra_compile_args=['-I../../c/lib/Config'])
+     extra_link_args=['-L../c/bin', '-L/lib'],
+     extra_compile_args=['-I../c/lib/Config'])
 
 if __name__ == "__main__":
     ffibuilder.compile(verbose=True)

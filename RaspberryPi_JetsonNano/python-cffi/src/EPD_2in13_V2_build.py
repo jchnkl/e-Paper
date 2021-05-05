@@ -12,11 +12,11 @@ ffibuilder.cdef('''
 
 ffibuilder.set_source('_EPD_2in13_V2_cffi',
 '''
-     #include "../../c/lib/e-Paper/EPD_2in13_V2.h"
+     #include "EPD_2in13_V2.h"
 ''',
      libraries=['EPD_2in13_V2', 'DEV_Config'], #, 'wiringPi'],
-     extra_link_args=['-L../../c/bin'],
-     extra_compile_args=['-I../../c/lib/Config'])
+     extra_link_args=['-L../c/bin'],
+     extra_compile_args=['-I../c/lib/Config', '-I../c/lib/e-Paper'])
 
 if __name__ == "__main__":
     ffibuilder.compile(verbose=True)
